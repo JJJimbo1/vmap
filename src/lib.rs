@@ -5,7 +5,7 @@
 
 #[derive(Debug, Clone)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct VMap<K, V> {
+pub struct VMap<K: PartialEq + Eq + Hash, V> {
     keys: Map<K>,
     values: Vec<Vec<V>>
 }
