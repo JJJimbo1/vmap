@@ -4,6 +4,7 @@
 #[cfg(fx_hash)] type Map<K> = HashMap<K, usize, FxBuildHasher>;
 
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct VMap<K, V> {
     keys: Map<K>,
     values: Vec<Vec<V>>
