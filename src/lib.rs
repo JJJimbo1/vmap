@@ -1,12 +1,9 @@
-#[cfg(not(fxhash))] use std::{collections::HashMap, hash::Hash};
-#[cfg(not(fxhash))] type Map<K> = HashMap<K, usize>;
-#[cfg(fxhash)] use fxhash::FxBuildHasher;
-#[cfg(fxhash)] type Map<K> = HashMap<K, usize, FxBuildHasher>;
+use std::{collections::HashMap, hash::Hash};
 
 #[derive(Debug, Clone)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct VMap<K: PartialEq + Eq + Hash, V> {
-    keys: Map<K>,
+    keys: HashMap<K, usize>,
     values: Vec<Vec<V>>
 }
 
