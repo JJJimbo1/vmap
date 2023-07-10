@@ -1,7 +1,7 @@
-#[cfg(not(fx_hash))] use std::{collections::HashMap, hash::Hash};
-#[cfg(not(fx_hash))] type Map<K> = HashMap<K, usize>;
-#[cfg(fx_hash)] use fx_hash::FxBuildHasher;
-#[cfg(fx_hash)] type Map<K> = HashMap<K, usize, FxBuildHasher>;
+#[cfg(not(fxhash))] use std::{collections::HashMap, hash::Hash};
+#[cfg(not(fxhash))] type Map<K> = HashMap<K, usize>;
+#[cfg(fxhash)] use fxhash::FxBuildHasher;
+#[cfg(fxhash)] type Map<K> = HashMap<K, usize, FxBuildHasher>;
 
 #[derive(Debug, Clone)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
