@@ -48,6 +48,10 @@ impl<K: Sized + Hash + PartialEq + Eq, V> VMap<K, V> {
         id
     }
 
+    pub fn values(&self) -> &Vec<Vec<V>> {
+        &self.values
+    }
+
     pub fn get_index(&self, key: &K) -> Option<&usize> {
         self.keys.get(key)
     }
