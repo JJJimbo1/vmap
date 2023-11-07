@@ -1,8 +1,9 @@
 use std::{collections::{HashMap, hash_map::RandomState}, hash::{Hash, BuildHasher}};
 
 #[derive(Debug, Clone)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct VMap<K: PartialEq + Eq + Hash, V, S = RandomState> {
+// #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct VMap<K: PartialEq + Eq + Hash, V, S: BuildHasher + Default = RandomState> {
     keys: HashMap<K, usize, S>,
     values: Vec<Vec<V>>
 }
@@ -23,7 +24,7 @@ impl<K: Sized + Hash + PartialEq + Eq, V> VMap<K, V, RandomState> {
     }
 }
 
-impl<K: Sized + Hash + PartialEq + Eq, V, S: BuildHasher> VMap<K, V, S> {
+impl<K: Sized + Hash + PartialEq + Eq, V, S: BuildHasher + Default> VMap<K, V, S> {
     pub fn with_hasher(hasher: S) -> Self {
         Self {
             keys: HashMap::with_hasher(hasher),
