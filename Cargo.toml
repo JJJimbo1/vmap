@@ -5,8 +5,7 @@ authors = ["JJJimbo1"]
 edition = "2021"
 
 [dependencies]
-# serde = { version = "1.0.163", features = ["derive"], optional = true }
-serde = { version = "1.0.191", features = ["derive"] }
+serde = { version = "1.0.163", features = ["derive"], optional = true }
 
 [lib]
 name = "valley_map"
