@@ -1,13 +1,13 @@
-use std::{collections::{HashMap, hash_map::RandomState}, hash::{Hash, BuildHasher}};
+use std::{collections::HashMap, hash::Hash};
 
 #[derive(Debug, Clone)]
 #[derive(serde::Serialize, serde::Deserialize)]
-pub struct VMap<K: PartialEq + Eq + Hash, V, S: BuildHasher + Default = RandomState> {
-    keys: HashMap<K, usize, S>,
+pub struct VMap<K: PartialEq + Eq + Hash, V> {
+    keys: HashMap<K, usize>,
     values: Vec<Vec<V>>
 }
 
-impl<K: Sized + Hash + PartialEq + Eq, V> VMap<K, V, RandomState> {
+impl<K: Sized + Hash + PartialEq + Eq, V> VMap<K, V> {
     pub fn new() -> Self {
         Self {
             keys: HashMap::new(),
@@ -18,22 +18,6 @@ impl<K: Sized + Hash + PartialEq + Eq, V> VMap<K, V, RandomState> {
     pub fn with_capacity(capacity: usize) -> Self {
         Self {
             keys: HashMap::with_capacity(capacity),
-            values: Vec::with_capacity(capacity),
-        }
-    }
-}
-
-impl<K: Sized + Hash + PartialEq + Eq, V, S: BuildHasher + Default> VMap<K, V, S> {
-    pub fn with_hasher(hasher: S) -> Self {
-        Self {
-            keys: HashMap::with_hasher(hasher),
-            values: Vec::new(),
-        }
-    }
-
-    pub fn with_capacity_and_hasher(capacity: usize, hasher: S) -> Self {
-        Self {
-            keys: HashMap::with_capacity_and_hasher(capacity, hasher),
             values: Vec::with_capacity(capacity),
         }
     }
