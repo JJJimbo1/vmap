@@ -1,12 +1,11 @@
 [package]
-name = "valley_map"
+name = "vmap"
 version = "0.0.1"
 authors = ["JJJimbo1"]
 edition = "2021"
 
 [dependencies]
-# serde = { version = "1.0.192", features = ["derive"], optional = true }
-serde = { version = "1.0.192", features = ["derive"] }
+serde = { version = "1.0.210", features = ["derive"], optional = true }
 
 [lib]
-name = "valley_map"
+name = "vmap"

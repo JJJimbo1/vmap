@@ -1,17 +1,19 @@
-use std::{collections::HashMap, hash::Hash};
+use std::{collections::HashMap, hash::{BuildHasher, Hash, RandomState}, marker::PhantomData, ops::Index};
 
 #[derive(Debug, Clone)]
-#[derive(serde::Serialize, serde::Deserialize)]
-pub struct VMap<K: PartialEq + Eq + Hash, V> {
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct VMap<K: PartialEq + Eq + Hash, V, S: Default + BuildHasher = RandomState> {
     keys: HashMap<K, usize>,
-    values: Vec<Vec<V>>
+    values: Vec<Vec<V>>,
+    phantom_data: PhantomData<S>,
 }
 
-impl<K: Sized + Hash + PartialEq + Eq, V> VMap<K, V> {
+impl<K: Sized + Hash + PartialEq + Eq, V, S: Default + BuildHasher> VMap<K, V, S> {
     pub fn new() -> Self {
         Self {
             keys: HashMap::new(),
             values: Vec::new(),
+            phantom_data: PhantomData,
         }
     }
 
@@ -19,10 +21,11 @@ impl<K: Sized + Hash + PartialEq + Eq, V> VMap<K, V> {
         Self {
             keys: HashMap::with_capacity(capacity),
             values: Vec::with_capacity(capacity),
+            phantom_data: PhantomData,
         }
     }
 
-    pub fn next_id(&self) -> usize {
+    pub fn len(&self) -> usize {
         self.values.len()
     }
 
@@ -32,7 +35,7 @@ impl<K: Sized + Hash + PartialEq + Eq, V> VMap<K, V> {
             self.values[*id].push(value);
             *id
         } else {
-            let id = self.next_id();
+            let id = self.len();
             self.values.push(vec![value]);
             self.keys.insert(key, id);
             id
@@ -40,7 +43,7 @@ impl<K: Sized + Hash + PartialEq + Eq, V> VMap<K, V> {
     }
 
     pub fn insert_all(&mut self, keys: Vec<K>, values: Vec<V>) -> usize {
-        let id = self.next_id();
+        let id = self.len();
         self.values.push(values);
         for k in keys {
             self.keys.insert(k, id);
@@ -84,17 +87,10 @@ impl<K: Sized + Hash + PartialEq + Eq, V> VMap<K, V> {
     }
 }
 
-// impl<K: Hash + PartialEq + Eq, V> Index<K> for VMap<K, V> {
-//     type Output = Vec<V>;
-//     fn index(&self, index: K) -> &Self::Output {
-//         let i = self.keys[&index];
-//         &self.values[i]
-//     }
-// }
-
-// impl<K, V> Index<usize> for VMap<K, V> {
-//     type Output = Vec<V>;
-//     fn index(&self, index: usize) -> &Self::Output {
-//         self.values[&index]
-//     }
-// }
+impl<K: Hash + PartialEq + Eq, V> Index<K> for VMap<K, V> {
+    type Output = Vec<V>;
+    fn index(&self, index: K) -> &Self::Output {
+        let i = self.keys[&index];
+        &self.values[i]
+    }
+}
